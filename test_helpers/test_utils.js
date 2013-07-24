@@ -35,7 +35,10 @@ if (driver == 'oracle') {
 }
 exports.personCreateStmt = personCreateStmt = "CREATE TABLE " + ifNotExistsSql + " People (id INTEGER PRIMARY KEY "
                                                 + (driver == 'mysql' ? 'auto_increment' : '')
-                                                + ", name " + textDateType + ", age INTEGER, txt " + textDateType + ", last_updated " + textDateType + ", created_date " + textDateType + ") "
+                                                + ", name " + textDateType + ", age INTEGER, txt " + textDateType 
+                                                + ", last_updated " + textDateType 
+                                                + ", manager_id INTEGER " 
+                                                + ", created_date " + textDateType + ") "
   + (driver == 'mysql' ? 'engine=innodb' : '');
 exports.phoneCreateStmt = phoneCreateStmt = "CREATE TABLE " + ifNotExistsSql + " Phones (id INTEGER PRIMARY KEY "
                                               + (driver == 'mysql' ? 'auto_increment' : '')
