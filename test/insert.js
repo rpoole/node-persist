@@ -106,6 +106,59 @@ exports['Insert'] = nodeunit.testCase({
     });
   },
 
+  "save methods called on update": function(test) {
+    var self = this;
+    var methodsCalledCount = 0;
+    
+    var person1 = new this.Person({ name: "Bob O'Neill" });
+
+    var incrementMethodsCalled = function(obj, conn, callback) {
+      test.equals(obj.name, person1.name);
+      methodsCalledCount++;
+      return callback();
+    };
+
+    var fns = ['onSave', 'beforeSave', 'beforeUpdate', 'afterUpdate', 'afterSave'];
+
+    person1.save(self.connection, function(err) {
+      test.ifError(err);
+
+      fns.forEach(function(fn) {
+        self.Person[fn] = incrementMethodsCalled;
+      });
+
+      person1.save(self.connection, function(err) {
+        test.equals(methodsCalledCount, fns.length);
+        test.done();
+      });
+    });
+  },
+
+  "save methods called on create": function(test) {
+    var self = this;
+    var methodsCalledCount = 0;
+    
+    var person1 = new this.Person({ name: "Bob O'Neill" });
+
+    var incrementMethodsCalled = function(obj, conn, callback) {
+      test.equals(obj.name, person1.name);
+      methodsCalledCount++;
+      return callback();
+    };
+
+    var fns = ['onSave', 'beforeSave', 'beforeCreate', 'afterCreate', 'afterSave'];
+
+    fns.forEach(function(fn) {
+      self.Person[fn] = incrementMethodsCalled;
+    });
+
+    person1.save(self.connection, function(err) {
+      test.ifError(err);
+      test.equals(methodsCalledCount, fns.length);
+      test.done();
+    });
+  },
+
   "save with no associations": function (test) {
     var self = this;
     var person1 = new this.Person({ name: "Bob O'Neill" });
